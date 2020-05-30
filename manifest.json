@@ -1,7 +1,7 @@
 {
 	"name": "Menagerie",
-	"version": "1.0.0",
-	"description": "TODO",
+	"version": "1.0.1",
+	"description": "A companion extension to the Menagerie project, enabling you to import media by right clicking on it.",
 	"permissions": [
 		"declarativeContent",
 		"storage",
