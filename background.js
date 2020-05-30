@@ -7,6 +7,18 @@ script.src = 'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js';
 script.type = 'text/javascript';
 document.getElementsByTagName('body')[0].appendChild(script);
 
+
+function getParameterByName(name, url) {
+    if (!url) return null;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+
 chrome.runtime.onInstalled.addListener(function() {
 	chrome.storage.sync.set({"port": 54321});
 	chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
@@ -33,6 +45,12 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
 			var url = info["linkUrl"] || info["srcUrl"]
 			if (!url) return
+
+			if (url.startsWith("https://pbs.twimg.com/media/")) {
+				const format = getParameterByName("format", url)
+				if (!format) format = "jpg"
+				url = url.slice(0, url.indexOf("?")) + "." + format + url.slice(url.indexOf("?"))
+			}
 
 			const apiUrl = host + ":" + port + "/upload?url=" + encodeURIComponent(url) + "&filename=" + encodeURIComponent(url.substring(url.lastIndexOf("/") + 1))
 			console.log(apiUrl)
