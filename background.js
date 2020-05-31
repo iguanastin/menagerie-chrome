@@ -52,7 +52,9 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 				url = url.slice(0, url.indexOf("?")) + "." + format + url.slice(url.indexOf("?"))
 			}
 
-			const apiUrl = host + ":" + port + "/upload?url=" + encodeURIComponent(url) + "&filename=" + encodeURIComponent(url.substring(url.lastIndexOf("/") + 1))
+      var filename = encodeURIComponent(url.substring(url.lastIndexOf("/") + 1))
+      if (filename.includes("?")) filename = filename.slice(0, filename.indexOf("?"))
+			const apiUrl = host + ":" + port + "/upload?url=" + encodeURIComponent(url) + "&filename=" + filename
 			console.log(apiUrl)
 
 			$.post({
