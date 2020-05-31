@@ -46,15 +46,15 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 			var url = info["linkUrl"] || info["srcUrl"]
 			if (!url) return
 
-			if (url.startsWith("https://pbs.twimg.com/media/")) {
+			if (url.startsWith("https://pbs.twimg.com/media/") && url.includes("?") && !url.slice(url.lastIndexOf("/") + 1, url.indexOf("?")).includes(".")) {
 				const format = getParameterByName("format", url)
 				if (!format) format = "jpg"
 				url = url.slice(0, url.indexOf("?")) + "." + format + url.slice(url.indexOf("?"))
 			}
 
-      var filename = encodeURIComponent(url.substring(url.lastIndexOf("/") + 1))
+      var filename = url.slice(url.lastIndexOf("/") + 1)
       if (filename.includes("?")) filename = filename.slice(0, filename.indexOf("?"))
-			const apiUrl = host + ":" + port + "/upload?url=" + encodeURIComponent(url) + "&filename=" + filename
+			const apiUrl = host + ":" + port + "/upload?url=" + encodeURIComponent(url) + "&filename=" + encodeURIComponent(filename)
 			console.log(apiUrl)
 
 			$.post({
