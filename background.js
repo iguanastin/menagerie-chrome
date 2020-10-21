@@ -41,7 +41,7 @@ chrome.contextMenus.removeAll(function() {
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
 	if (info.menuItemId == CONTEXT_MENU_ITEM_ID) {
 		chrome.storage.sync.get("port", function(data) {
-			const port = data.port
+			const port = data.port || 54321
 
 			var url = info["linkUrl"] || info["srcUrl"]
 			if (!url) return
@@ -62,8 +62,11 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 			  success: function(result) {
 			    console.log(result)
 			  },
-			  error: function(error) {
+			  error: function(error, e1, e2) {
+          chrome.tabs.create({ 'url': 'chrome://extensions/?options=' + chrome.runtime.id });
 			    console.log(error)
+          console.log(e1)
+          console.log(e2)
 			  }
 			})
 		});
